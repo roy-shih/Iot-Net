@@ -20,7 +20,7 @@ const generateRandomData = () => {
 const color = ['blue', 'red', 'green'];
 
 
-const IMU = ({ title }) => {
+const IMU = ({ id, onDelete }) => {
   const [deviceName, setDeviceName] = useState(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ const IMU = ({ title }) => {
   const showLoadingComponent = (message) => {
     if (message === 0) {
       setLoading(false);
-      if (!loading) setDone(true);
+      if (!loading) setDone(true)
     } else {
       setLoading(true);
     }
@@ -50,9 +50,15 @@ const IMU = ({ title }) => {
   };
   return (
     // eslint-disable-next-line no-nested-ternary
-    <div key={title} className={`bg-white h-auto dark:text-gray-200 dark:bg-secondary-dark-bg ${done ? 'w-full' : window.innerWidth < 765 ? 'w-40' : 'w-56'}  p-4 pt-2 rounded-2xl`}>
+    <div key={id} className={`bg-white h-auto dark:text-gray-200 dark:bg-secondary-dark-bg ${done ? 'w-full' : window.innerWidth < 765 ? 'w-40' : 'w-56'}  p-4 pt-2 rounded-2xl`}>
       <div className="flex grid grid-cols-1 gap-1 mb-5 relative z-0">
-        <h1>ID: {title}</h1>
+        <div className="flex justify-between">
+          <p className="text-left">ID: {id}</p>
+          <button className="" onClick={onDelete}>
+            {/* trash bin */}
+            x
+          </button>
+        </div>
         {loading ? (
             <div  className="flex justify-center items-center h-full w-full bg-white dark:bg-secondary-dark-bg opacity-50 z-10 absolute">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-300 " />
@@ -60,7 +66,7 @@ const IMU = ({ title }) => {
         ) : null}
         { !done ? (
             <>
-            <Stopwatch id={title} onButtonClick={handleButtonClick} />
+            <Stopwatch id={id} onButtonClick={handleButtonClick} />
               <WebBLE
               serviceUuid="automation_io"
               characteristicUuid="aerobic_heart_rate_lower_limit"

@@ -1,9 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import IMU from '../components/IMU';
 import { useStateContext } from '../contexts/ContextProvider';
 
 const MultiIMUDataCollectSystem = () => {
   const { currentColor } = useStateContext();
+  const [components, setComponents] = useState([]);
+
+  const handleCreate = () => {
+    let newId = components.length;
+    // eslint-disable-next-line no-loop-func
+    while (components.find((c) => c.id === newId)) {
+      newId += 1;
+    }
+    setComponents([...components, { id: newId }]);
+  };
+
+  const handleDelete = (id) => {
+    setComponents(components.filter((c) => c.id !== id));
+  };
 
   const controlAll = (sta) => {
     // get all IMU
@@ -37,8 +51,6 @@ const MultiIMUDataCollectSystem = () => {
   const DownloadAll = () => {
     controlAll('Download');
   };
-
-
   return (
     <div>
       <div className="flex gap-0 flex-wrap min-h-screen">
@@ -46,22 +58,22 @@ const MultiIMUDataCollectSystem = () => {
           <p className="font-semibold text-xl">Multi IMU Data Collect system</p>
           {/* a button can control all button  */}
           <div className="flex flex-wrap mt-5 justify-center gap-4 items-center">
-          <button
-            id="Start"
-            className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
-            onClick={startAll}
-            style={{ backgroundColor:currentColor}}
-          >
-            Start
-          </button>
-          <button
-            id="Stop"
-            className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
-            onClick={stopAll}
-            style={{ backgroundColor:currentColor}}
-          >
-            Stop
-          </button>
+            <button
+              id="Start"
+              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              onClick={startAll}
+              style={{ backgroundColor:currentColor}}
+            >
+              Start
+            </button>
+            <button
+              id="Stop"
+              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              onClick={stopAll}
+              style={{ backgroundColor:currentColor}}
+            >
+              Stop
+            </button>
           <button
             id="Done"
             className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
@@ -86,16 +98,22 @@ const MultiIMUDataCollectSystem = () => {
           >
             Download
           </button>
+          <button
+            id="Download"
+            className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+            onClick={handleCreate}
+            style={{ backgroundColor:currentColor}}
+          >
+            +
+          </button>
           </div>
           <div className="mt-5">
             <div className="flex items-center gap-4">
               <div className="flex flex-wrap lg:flex-nowrap  ">
-                <div id="IMU" className="flex flex-wrap justify-center gap-1 items-center justify-center w-full">
-                {/* <div id="IMU" className={`${window.innerWidth < 765 ? 'flex flex-wrap justify-center' : 'grid grid-cols-4'}  gap-3 items-center justify-center w-full`}> */}
-                  <IMU title="imu1" />
-                  <IMU title="imu2" />
-                  <IMU title="imu3" />
-                  <IMU title="imu4" />
+                <div id="IMU" className="flex flex-wrap gap-1 items-center justify-center w-full">
+                  {components.map((c) => (
+                    <IMU id={c.id} key={c.id} onDelete={() => handleDelete(c.id)} />
+                  ))}
                 </div>
               </div>
             </div>
