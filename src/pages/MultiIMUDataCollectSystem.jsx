@@ -59,53 +59,59 @@ const MultiIMUDataCollectSystem = () => {
           {/* a button can control all button  */}
           <div className="flex flex-wrap mt-5 justify-center gap-4 items-center">
             <button
+              type="button"
               id="Start"
-              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              className="text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
               onClick={startAll}
-              style={{ backgroundColor:currentColor}}
+              style={{ backgroundColor: currentColor }}
             >
               Start
             </button>
             <button
+              type="button"
               id="Stop"
               className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
               onClick={stopAll}
-              style={{ backgroundColor:currentColor}}
+              style={{ backgroundColor: currentColor }}
             >
               Stop
             </button>
-          <button
-            id="Done"
-            className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
-            onClick={doneAll}
-            style={{ backgroundColor:currentColor}}
-          >
-            Done
-          </button>
-          <button
-            id="Reset"
-            className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
-            onClick={ResetAll}
-            style={{ backgroundColor:currentColor}}
-          >
-            Reset
-          </button>
-          <button
-            id="Download"
-            className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
-            onClick={DownloadAll}
-            style={{ backgroundColor:currentColor}}
-          >
-            Download
-          </button>
-          <button
-            id="Download"
-            className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
-            onClick={handleCreate}
-            style={{ backgroundColor:currentColor}}
-          >
-            +
-          </button>
+            <button
+              type="button"
+              id="Done"
+              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              onClick={doneAll}
+              style={{ backgroundColor: currentColor }}
+            >
+              Done
+            </button>
+            <button
+              type="button"
+              id="Reset"
+              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              onClick={ResetAll}
+              style={{ backgroundColor: currentColor }}
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              id="Download"
+              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              onClick={DownloadAll}
+              style={{ backgroundColor: currentColor }}
+            >
+              Download
+            </button>
+            <button
+              type="button"
+              id="Download"
+              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              onClick={handleCreate}
+              style={{ backgroundColor: currentColor }}
+            >
+              +
+            </button>
           </div>
           <div className="mt-5">
             <div className="flex items-center gap-4">

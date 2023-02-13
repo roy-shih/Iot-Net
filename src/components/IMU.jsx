@@ -1,9 +1,10 @@
+/* eslint-disable react/button-has-type */
 import React, { useState } from 'react';
 import Stopwatch from './StopWatch';
 import WebBLE from './WebBLE';
 import D3Line from './D3Line';
 
-var data1 = [];
+let data1 = [];
 
 const generateRandomData = () => {
   const data = [];
@@ -18,7 +19,6 @@ const generateRandomData = () => {
 };
 
 const color = ['blue', 'red', 'green'];
-
 
 const IMU = ({ id, onDelete }) => {
   const [deviceName, setDeviceName] = useState(null);
@@ -37,7 +37,7 @@ const IMU = ({ id, onDelete }) => {
   const showLoadingComponent = (message) => {
     if (message === 0) {
       setLoading(false);
-      if (!loading) setDone(true)
+      if (!loading) setDone(true);
     } else {
       setLoading(true);
     }
@@ -51,32 +51,32 @@ const IMU = ({ id, onDelete }) => {
   return (
     // eslint-disable-next-line no-nested-ternary
     <div key={id} className={`bg-white h-auto dark:text-gray-200 dark:bg-secondary-dark-bg ${done ? 'w-full' : window.innerWidth < 765 ? 'w-40' : 'w-56'}  p-4 pt-2 rounded-2xl`}>
-      <div className="flex grid grid-cols-1 gap-1 mb-5 relative z-0">
+      <div className="grid grid-cols-1 gap-1 mb-5 relative z-0">
         <div className="flex justify-between">
-          <p className="text-left">ID: {id}</p>
+          <p className="text-left">ID: {deviceName}({id})</p>
           <button className="" onClick={onDelete}>
             {/* trash bin */}
             x
           </button>
         </div>
         {loading ? (
-            <div  className="flex justify-center items-center h-full w-full bg-white dark:bg-secondary-dark-bg opacity-50 z-10 absolute">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-300 " />
-            </div>
+          <div className="flex justify-center items-center h-full w-full bg-white dark:bg-secondary-dark-bg opacity-50 z-10 absolute">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-300 " />
+          </div>
         ) : null}
         { !done ? (
-            <>
+          <>
             <Stopwatch id={id} onButtonClick={handleButtonClick} />
-              <WebBLE
+            <WebBLE
               serviceUuid="automation_io"
               characteristicUuid="aerobic_heart_rate_lower_limit"
               onDeviceConnected={onDeviceConnected}
               sendData={data}
               loadingLongData={showLoadingComponent}
             />
-            </>) : (
-            // 先放大容器，再放圖表
-            <>
+          </>
+        ) : (
+          <>
             <div className="justify-center overflow-auto mt-3 w-full items-center">
               <D3Line data={data1} color={color} width={`${data1.length * 1.5 * window.innerWidth}`} height={300} />
             </div>
@@ -84,26 +84,19 @@ const IMU = ({ id, onDelete }) => {
               type="button"
               className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
             >
-            Download
-          </button>
-          {/* <div className="flex flex-wrap justify-center gap-1 items-center justify-center w-full">
-            <p>Start at: 17:30:40,2023.02.09</p>
-            <p>End at: 17:30:42,2023.02.09</p>
-            <p>Duration: 100 sec</p>
-          </div> */}
-          <button
+              Download
+            </button>
+            <button
               type="button"
               id="Reset"
               className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
               onClick={resethandler}
             >
-            Reset
-          </button>
+              Reset
+            </button>
           </>
-          )
-        }
+        )}
       </div>
-      
     </div>
   );
 };

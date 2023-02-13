@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 // fake data from the imuData.js
 import { imuData } from '../data/imuData';
 
-
 // eslint-disable-next-line consistent-return
 const WebBLE = ({ deviceName, serviceUuid, characteristicUuid, onDeviceConnected, sendData, loadingLongData }) => {
   const [device, setDevice] = useState(null);
@@ -13,42 +12,33 @@ const WebBLE = ({ deviceName, serviceUuid, characteristicUuid, onDeviceConnected
 
   useEffect(async () => {
     // parse the data
-    var parsedData="";
+    let parsedData = '';
     if (sendData !== null) {
       parsedData = JSON.parse(sendData);
       console.log(parsedData);
-    } 
-    if (parsedData.status == "done"){
+    }
+    if (parsedData.status === 'done') {
       loadingLongData(1);
-      var i = 0;
-      var start=0;
-      //clean data
-      let updatedDataArr = [];
-      while(i<imuData.length){
-        // simulate data upload
-        if(start == -1){
-            break;
+      let i = 0;
+      let start = 0;
+      const updatedDataArr = [];
+      while (i < imuData.length) {
+        if (imuData[i] === 'S') {
+          start = 1;
         }
-        if(start==1){
-            if(imuData[i]=="E") {
-                start=-1;
-            }else{
-                console.log(imuData[i])
-                updatedDataArr.push(imuData[i]);
-            }
-        }else{
-            if(imuData[i]=="S") {
-                start=1;
-            }
+        if (start === 1) {
+          updatedDataArr.push(imuData[i]);
         }
-        i++;
+        if (imuData[i] === 'E') {
+          break;
+        }
+        i += 1;
       }
       setDataArr(updatedDataArr);
       console.log(dataArr);
       setTimeout(() => {
         loadingLongData(0);
-        }, 3000);
-      
+      }, 3000);
     }
     // send data to the device
     // if (device) {
