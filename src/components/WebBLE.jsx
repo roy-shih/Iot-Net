@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { imuData } from '../data/imuData';
 
 // eslint-disable-next-line consistent-return
-const WebBLE = ({ deviceName, serviceUuid, characteristicUuid, onDeviceConnected, sendData, loadingLongData }) => {
+const WebBLE = ({ deviceName, serviceUuid, characteristicUuid, datacharacteristicUuid, onDeviceConnected, sendData, loadingLongData }) => {
   const [device, setDevice] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -60,10 +60,14 @@ const WebBLE = ({ deviceName, serviceUuid, characteristicUuid, onDeviceConnected
       setDevice(thisdevice);
       const server = await device.gatt.connect();
       const service = await server.getPrimaryService(serviceUuid);
-      const characteristic = await service.getCharacteristic(characteristicUuid);
-      characteristic.startNotifications();
+      const characteristic = await service.getCharacteristic(characteristicUuid); // write data
+      const datacharacteristic = await service.getCharacteristic(datacharacteristicUuid); // read data
+      const encoder = new TextEncoder();
+      const encodedData = encoder.encode('start');
+      await characteristic.writeValue(encodedData);
+      datacharacteristic.startNotifications();
       // eslint-disable-next-line no-use-before-define
-      characteristic.addEventListener('characteristicvaluechanged', handleNotification);
+      datacharacteristic.addEventListener('characteristicvaluechanged', handleNotification);
       onDeviceConnected(deviceName);
     } catch (err) {
       setError(err);

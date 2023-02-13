@@ -5,6 +5,7 @@ import { useStateContext } from '../contexts/ContextProvider';
 const MultiIMUDataCollectSystem = () => {
   const { currentColor } = useStateContext();
   const [components, setComponents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleCreate = () => {
     let newId = components.length;
@@ -51,6 +52,14 @@ const MultiIMUDataCollectSystem = () => {
   const DownloadAll = () => {
     controlAll('Download');
   };
+
+  const handleLoading = (message) => {
+    if (message === 0) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  };
   return (
     <div>
       <div className="flex gap-0 flex-wrap min-h-screen">
@@ -59,6 +68,7 @@ const MultiIMUDataCollectSystem = () => {
           {/* a button can control all button  */}
           <div className="flex flex-wrap mt-5 justify-center gap-4 items-center">
             <button
+              {...{ disabled: loading }}
               type="button"
               id="Start"
               className="text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
@@ -68,6 +78,7 @@ const MultiIMUDataCollectSystem = () => {
               Start
             </button>
             <button
+              {...{ disabled: loading }}
               type="button"
               id="Stop"
               className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
@@ -77,6 +88,7 @@ const MultiIMUDataCollectSystem = () => {
               Stop
             </button>
             <button
+              {...{ disabled: loading }}
               type="button"
               id="Done"
               className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
@@ -86,6 +98,7 @@ const MultiIMUDataCollectSystem = () => {
               Done
             </button>
             <button
+              {...{ disabled: loading }}
               type="button"
               id="Reset"
               className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
@@ -95,6 +108,7 @@ const MultiIMUDataCollectSystem = () => {
               Reset
             </button>
             <button
+              {...{ disabled: loading }}
               type="button"
               id="Download"
               className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
@@ -104,6 +118,7 @@ const MultiIMUDataCollectSystem = () => {
               Download
             </button>
             <button
+              {...{ disabled: loading }}
               type="button"
               id="Download"
               className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
@@ -118,7 +133,7 @@ const MultiIMUDataCollectSystem = () => {
               <div className="flex flex-wrap lg:flex-nowrap  ">
                 <div id="IMU" className="flex flex-wrap gap-1 items-center justify-center w-full">
                   {components.map((c) => (
-                    <IMU id={c.id} key={c.id} onDelete={() => handleDelete(c.id)} />
+                    <IMU id={c.id} key={c.id} onDelete={() => handleDelete(c.id)} loadingData={handleLoading} />
                   ))}
                 </div>
               </div>

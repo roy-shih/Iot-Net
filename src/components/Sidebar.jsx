@@ -25,7 +25,7 @@ const Sidebar = () => {
         <>
           <div className="flex justify-between items-center">
             <Link to="/" onClick={handleCloseSideBar} className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900">
-              <SiShopware /> <span>中榮Ｘ陽明交大<br></br> Web IoT SaaS</span>
+              <SiShopware /> <span>中榮Ｘ陽明交大 <br /> IoT Net SaaS</span>
             </Link>
             <TooltipComponent content="Menu" position="BottomCenter">
               <button

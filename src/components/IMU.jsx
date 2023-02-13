@@ -20,11 +20,13 @@ const generateRandomData = () => {
 
 const color = ['blue', 'red', 'green'];
 
-const IMU = ({ id, onDelete }) => {
+const IMU = ({ id, onDelete, loadingData }) => {
   const [deviceName, setDeviceName] = useState(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
   data1 = generateRandomData();
 
   const onDeviceConnected = (name) => {
@@ -37,16 +39,27 @@ const IMU = ({ id, onDelete }) => {
   const showLoadingComponent = (message) => {
     if (message === 0) {
       setLoading(false);
+      loadingData(0);
       if (!loading) setDone(true);
     } else {
       setLoading(true);
+      loadingData(1);
     }
   };
 
   const resethandler = () => {
     setDone(false);
     setLoading(false);
+    loadingData(0);
     setData(null);
+  };
+
+  const handleStartTime = (time) => {
+    setStartTime(time);
+  };
+
+  const handleEndTime = (time) => {
+    setEndTime(time);
   };
   return (
     // eslint-disable-next-line no-nested-ternary
@@ -66,10 +79,11 @@ const IMU = ({ id, onDelete }) => {
         ) : null}
         { !done ? (
           <>
-            <Stopwatch id={id} onButtonClick={handleButtonClick} />
+            <Stopwatch id={id} onButtonClick={handleButtonClick} startat={handleStartTime} endat={handleEndTime} />
             <WebBLE
-              serviceUuid="automation_io"
-              characteristicUuid="aerobic_heart_rate_lower_limit"
+              serviceUuid="19B10000-E8F2-537E-4F6C-D104768A1214"
+              characteristicUuid="19B10001-E8F2-537E-4F6C-D104768A1214"
+              datacharacteristicUuid="19B10002-E8F2-537E-4F6C-D104768A1214"
               onDeviceConnected={onDeviceConnected}
               sendData={data}
               loadingLongData={showLoadingComponent}
@@ -80,16 +94,32 @@ const IMU = ({ id, onDelete }) => {
             <div className="justify-center overflow-auto mt-3 w-full items-center">
               <D3Line data={data1} color={color} width={`${data1.length * 1.5 * window.innerWidth}`} height={300} />
             </div>
+            <div className="flex justify-between item-center">
+              {/* time format */}
+              {window.innerWidth < 765 ? (
+                <>
+                  <p className="text-left mr-5">{new Date(startTime).toLocaleTimeString()}</p>
+                  <p className="text-left">({(endTime - startTime) / 1000})</p>
+                  <p className="text-left mr-5 ">{new Date(endTime).toLocaleTimeString()}</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-left mr-5">Start Time: {new Date(startTime).toLocaleTimeString()}</p>
+                  <p className="text-left">Duration: {(endTime - startTime) / 1000} sec</p>
+                  <p className="text-left mr-5 ">End Time: {new Date(endTime).toLocaleTimeString()}</p>
+                </>
+              )}
+            </div>
             <button
               type="button"
-              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              className="text-gray-800 dark:text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
             >
               Download
             </button>
             <button
               type="button"
               id="Reset"
-              className=" text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
+              className="text-gray-800 dark:text-white py-2 text-2s opacity-0.9 rounded-full p-4 hover:drop-shadow-xl text-center"
               onClick={resethandler}
             >
               Reset

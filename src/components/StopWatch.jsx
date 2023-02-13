@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Stopwatch = ({ id, onButtonClick }) => {
+const Stopwatch = ({ id, onButtonClick, startat, endat }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [isStop, setIsStop] = useState(false);
@@ -23,6 +23,7 @@ const Stopwatch = ({ id, onButtonClick }) => {
       setIsStarted(true);
       setIsStop(false);
       setStartTime(Date.now());
+      startat(Date.now());
       handleClick(`{"id":"${id}","time":"${time}","status":"start"}`);
       const newIntervalId = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
@@ -55,6 +56,7 @@ const Stopwatch = ({ id, onButtonClick }) => {
     setIsRunning(false);
     setIsStarted(false);
     setIsStop(false);
+    endat(endTime);
     handleClick(`{"id":"${id}", "time":"${time}", "status":"done", "startTime":"${startTime}", "endTime":"${endTime}"}`);
     setTime(0);
   };
