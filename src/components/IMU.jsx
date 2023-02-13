@@ -31,6 +31,7 @@ const IMU = ({ id, onDelete, loadingData }) => {
 
   const onDeviceConnected = (name) => {
     setDeviceName(name);
+    console.log(name);
   };
   const handleButtonClick = (message) => {
     setData(message);
@@ -66,29 +67,37 @@ const IMU = ({ id, onDelete, loadingData }) => {
     <div key={id} className={`bg-white h-auto dark:text-gray-200 dark:bg-secondary-dark-bg ${done ? 'w-full' : window.innerWidth < 765 ? 'w-40' : 'w-56'}  p-4 pt-2 rounded-2xl`}>
       <div className="grid grid-cols-1 gap-1 mb-5 relative z-0">
         <div className="flex justify-between">
-          <p className="text-left">ID: {deviceName}({id})</p>
+          <p className="text-left">{deviceName} (ID: {id})</p>
           <button className="" onClick={onDelete}>
             {/* trash bin */}
             x
           </button>
         </div>
         {loading ? (
-          <div className="flex justify-center items-center h-full w-full bg-white dark:bg-secondary-dark-bg opacity-50 z-10 absolute">
+          <div className="flex justify-center items-center h-full w-full bg-gray-100 dark:bg-secondary-dark-bg opacity-50 z-10 absolute">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-300 " />
           </div>
         ) : null}
+        {deviceName !== null || !done ? (
+          <Stopwatch id={id} onButtonClick={handleButtonClick} startat={handleStartTime} endat={handleEndTime} />
+        ) : null}
+        {deviceName === null || !done ? (
+          // blue circle animate-ping
+          <div className="flex justify-center items-center mt-5 mb-3  h-full w-full bg-white dark:bg-secondary-dark-bg z-10 rotate-180">
+            <div className="animate-ping rounded-full h-16 w-16 border-b-2 border-sky-600 rotate-180" />
+          </div>
+        ) : null }
         { !done ? (
-          <>
-            <Stopwatch id={id} onButtonClick={handleButtonClick} startat={handleStartTime} endat={handleEndTime} />
+          <div className=" z-20">
             <WebBLE
-              serviceUuid="19B10000-E8F2-537E-4F6C-D104768A1214"
-              characteristicUuid="19B10001-E8F2-537E-4F6C-D104768A1214"
-              datacharacteristicUuid="19B10002-E8F2-537E-4F6C-D104768A1214"
+              serviceUuid={'19B10000-E8F2-537E-4F6C-D104768A1214'.toLowerCase()}
+              characteristicUuid={'19B10001-E8F2-537E-4F6C-D104768A1214'.toLowerCase()}
+              datacharacteristicUuid={'19B10002-E8F2-537E-4F6C-D104768A1214'.toLowerCase()}
               onDeviceConnected={onDeviceConnected}
               sendData={data}
               loadingLongData={showLoadingComponent}
             />
-          </>
+          </div>
         ) : (
           <>
             <div className="justify-center overflow-auto mt-3 w-full items-center">

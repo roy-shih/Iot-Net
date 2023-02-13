@@ -68,7 +68,7 @@ const Stopwatch = ({ id, onButtonClick, startat, endat }) => {
     return `${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
   };
   return (
-    <div key={id} className="flex flex-col items-center">
+    <div key={id} className="flex flex-col items-center mt-5">
       <h1 className="text-3xl font-bold">{formattedTime(time)}</h1>
       { isStarted ? (
         null

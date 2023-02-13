@@ -63,7 +63,7 @@ const MultiIMUDataCollectSystem = () => {
   return (
     <div>
       <div className="flex gap-0 flex-wrap min-h-screen">
-        <div className=" dark:text-gray-200 dark:main-dark-bg mt-10 p-4 rounded-2xl  w-full ">
+        <div className=" dark:text-gray-200 dark:main-dark-bg mt-10 p-4 rounded-2xl  w-full item-center ">
           <p className="font-semibold text-xl">Multi IMU Data Collect system</p>
           {/* a button can control all button  */}
           <div className="flex flex-wrap mt-5 justify-center gap-4 items-center">
