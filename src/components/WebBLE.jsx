@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from 'react';
 // fake data from the imuData.js
-import { imuData } from '../data/imuData';
+// import { imuData } from '../data/imuData';
 
 // eslint-disable-next-line consistent-return
-const WebBLE = ({ serviceUuid, characteristicUuid, datacharacteristicUuid, onDeviceConnected, sendData, loadingLongData }) => {
+const WebBLE = ({ serviceUuid, characteristicUuid, datacharacteristicUuid, onDeviceConnected, sendData, loadingLongData, onDisconnect, output }) => {
   const [error, setError] = useState(null);
   const [connectState, setConnectState] = useState(0);
   const [loading, setLoading] = useState(false);
   const [characteristic, setCharacteristic] = useState(null);
   // data is a array like [1,2,3,4,5,6,7,8,9,10]
-  const [dataArr, setDataArr] = useState([]);
-
+  const updatedDataArr = [];
   // initial check
   useEffect(() => {
-    if (!navigator.bluetooth) {
-      // setError('Web Bluetooth API is not available in this browser.');
-      alert('Web Bluetooth API is not available in this browser.');
+    // console.log('handle disconnect');
+    if (onDisconnect && connectState) {
+      // console.log('disconnect');
+      characteristic.service.device.gatt.disconnect();
     }
-  }, []);
+  }, [onDisconnect]);
 
   useEffect(async () => {
     // parse the data
     let parsedData = '';
     if (sendData !== null) {
       parsedData = JSON.parse(sendData);
-      console.log(parsedData);
+      // console.log(parsedData);
+      // console.log(onDisconnect,characteristic);
       if (parsedData.status === 'start') {
         // eslint-disable-next-line no-use-before-define
         handleCommand('1');
@@ -34,33 +35,12 @@ const WebBLE = ({ serviceUuid, characteristicUuid, datacharacteristicUuid, onDev
       } else if (parsedData.status === 'reset') {
         // eslint-disable-next-line no-use-before-define
         handleCommand('3');
+        setConnectState(1);
+        // console.log(connectState);
       } else if (parsedData.status === 'done') {
         // eslint-disable-next-line no-use-before-define
         handleCommand('2');
       }
-    }
-    if (parsedData.status === 'done') {
-      loadingLongData(1);
-      let i = 0;
-      let start = 0;
-      const updatedDataArr = [];
-      while (i < imuData.length) {
-        if (imuData[i] === 'S') {
-          start = 1;
-        }
-        if (start === 1) {
-          updatedDataArr.push(imuData[i]);
-        }
-        if (imuData[i] === 'E') {
-          break;
-        }
-        i += 1;
-      }
-      setDataArr(updatedDataArr);
-      console.log(dataArr);
-      setTimeout(() => {
-        loadingLongData(0);
-      }, 3000);
     }
   }, [sendData]);
 
@@ -73,11 +53,6 @@ const WebBLE = ({ serviceUuid, characteristicUuid, datacharacteristicUuid, onDev
       });
       onDeviceConnected(thisdevice.name);
       const server = await thisdevice.gatt.connect();
-      server.ongattserverdisconnected = () => {
-        console.log('Bluetooth device disconnected');
-        setCharacteristic(null);
-        setConnectState(0);
-      };
       const service = await server.getPrimaryService(serviceUuid);
       const writecharacteristic = await service.getCharacteristic(characteristicUuid); // write data
       const datacharacteristic = await service.getCharacteristic(datacharacteristicUuid); // read data
@@ -85,6 +60,7 @@ const WebBLE = ({ serviceUuid, characteristicUuid, datacharacteristicUuid, onDev
       // eslint-disable-next-line no-use-before-define
       datacharacteristic.addEventListener('characteristicvaluechanged', handleNotification);
       setConnectState(1);
+      setLoading(false);
       return writecharacteristic;
     } catch (e) {
       console.log(e);
@@ -109,21 +85,44 @@ const WebBLE = ({ serviceUuid, characteristicUuid, datacharacteristicUuid, onDev
     }
   };
 
+  function parseData(i, str) {
+    str.replace('S', '');
+    str.replace('E', '');
+    const [ax, ay, az, gx, gy, gz] = str.split(';');
+    return { time: i, ax: parseFloat(ax), ay: parseFloat(ay), az: parseFloat(az), gx: parseFloat(gx), gy: parseFloat(gy), gz: parseFloat(gz) };
+  }
+
   const handleNotification = (event) => {
     // console.log('Notification data:', event.target.value);
     // decode the data to string
     const data = new DataView(event.target.value.buffer);
     const decoder = new TextDecoder();
     const decodedData = decoder.decode(data);
-    console.log(decodedData);
+    loadingLongData(1);
+    updatedDataArr.push(decodedData);
+    if (decodedData === 'E') {
+      const arr = [];
+      updatedDataArr.forEach((element, index) => {
+        if (element !== 'S' && element !== 'E') {
+          const parsedData = parseData(index, element);
+          arr.push(parsedData);
+        }
+      });
+      updatedDataArr.length = 0;
+      output(arr);
+      loadingLongData(0);
+    }
   };
 
   const handleCommand = (command) => {
     // web ble 傳送資料
     const encoder = new TextEncoder();
     const encodedData = encoder.encode(command);
-    console.log(encodedData);
-    characteristic.writeValue(encodedData);
+    try {
+      characteristic.writeValue(encodedData);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   if (loading) {
@@ -152,14 +151,7 @@ const WebBLE = ({ serviceUuid, characteristicUuid, datacharacteristicUuid, onDev
     );
   }
   return (
-    <div className="flex justify-center mt-5">
-      <button type="button" className="bg-green-200 hover:bg-green-300 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-        <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z" />
-        </svg>
-        <span>connected</span>
-      </button>
-    </div>
+    <p className="text-sm text-green-400  mt-5 text-center">Connected</p>
   );
 };
 

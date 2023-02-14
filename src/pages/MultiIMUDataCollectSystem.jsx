@@ -4,9 +4,10 @@ import { useStateContext } from '../contexts/ContextProvider';
 
 const MultiIMUDataCollectSystem = () => {
   const { currentColor } = useStateContext();
-  const [components, setComponents] = useState([]);
+  const [components, setComponents] = useState([{ id: 0 }]);
   const [loading, setLoading] = useState(false);
-
+  // to do : add a list to save IMU name, then check if IMU name is in the list, then alert user "rechoose IMU", else add IMU name to the list.
+  // const [IMUName, setIMUName] = useState([]);
   const handleCreate = () => {
     let newId = components.length;
     // eslint-disable-next-line no-loop-func
