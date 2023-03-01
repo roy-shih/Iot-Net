@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import Stopwatch from './StopWatch';
-import WebBLE from './WebBLE';
+// import WebBLE from './WebBLE';
+import WebSocket from './WebSocket';
 
 const IMU = ({ id, onDelete, loadingData }) => {
   const [deviceName, setDeviceName] = useState(null);
@@ -33,7 +34,7 @@ const IMU = ({ id, onDelete, loadingData }) => {
     if (message === 0) {
       setLoading(false);
       loadingData(0);
-      if (!loading) setDone(true);
+      setDone(true);
     } else {
       setLoading(true);
       loadingData(1);
@@ -114,7 +115,7 @@ const IMU = ({ id, onDelete, loadingData }) => {
           </div>
         ) : null }
         <div className={`z-20 ${!done ? '' : 'hidden'}`}>
-          <WebBLE
+          {/* <WebBLE
             serviceUuid={'19B10000-E8F2-537E-4F6C-D104768A1214'.toLowerCase()}
             characteristicUuid={'19B10001-E8F2-537E-4F6C-D104768A1214'.toLowerCase()}
             datacharacteristicUuid={'19B10002-E8F2-537E-4F6C-D104768A1214'.toLowerCase()}
@@ -122,6 +123,13 @@ const IMU = ({ id, onDelete, loadingData }) => {
             sendData={data}
             loadingLongData={showLoadingComponent}
             onDisconnect={disconnect}
+            output={handleWEBBLEoutput}
+          /> */}
+          <WebSocket
+            uuid={id}
+            onDeviceConnected={onDeviceConnected}
+            sendData={data}
+            loadingLongData={showLoadingComponent}
             output={handleWEBBLEoutput}
           />
         </div>

@@ -7,19 +7,57 @@
         <textarea id="txtShow" disabled></textarea>
         <input id="txtInput" type="text">
         <button id="btnSend">送出</button>
+        <button id="btnClean">Clean</button>
+        <button id="btnSendData">Send data</button>
+        <button id="btnSendList">initial send List to client</button>
     </body>
     <script>
+        let list = [
+            { value: 'device1', label: 'device1' },
+            { value: 'device2', label: 'device2' },
+            { value: 'device3', label: 'device3' },
+            { value: 'device4', label: 'device4' },
+            { value: 'device5', label: 'device5' }
+        ];
+        const dataString = "0.1,0.2,0.3,S0.1,0.2,0.3,0.4,0.3,0.2;0.4,0.5,0.2,0.4,0.1,0.2E,0.1,0.2,0.3" 
         document.addEventListener("DOMContentLoaded", event => { 
         let keyinDom = document.querySelector('#txtInput')
         let showDom = document.querySelector('#txtShow')
+        
+        document.querySelector("#btnSendData").addEventListener('click',() => {
+            let msg = {
+                type: 'data',
+                device: 'device1',
+                data: dataString
+            }
+            ws.send(JSON.stringify(msg));
+            msg = {
+                type: 'data',
+                device: 'device2',
+                data: dataString
+            }
+            ws.send(JSON.stringify(msg));
+        })
+
+        document.querySelector("#btnSendList").addEventListener('click',() => {
+            let msg = {
+                type: 'deviceList',
+                data: list
+            }
+            ws.send(JSON.stringify(msg));
+        })
 
         document.querySelector("#btnSend").addEventListener('click',() => {
             let txt = keyinDom.value;
             ws.send(txt);
         })
 
+        document.querySelector("#btnClean").addEventListener('click',() => {
+            showDom.value = "";
+        })
+
         // 建立 WebSocket (本例 server 端於本地運行)
-        let url = 'ws://localhost:3000'
+        let url = 'wss://imu-websocket-server.onrender.com'
         var ws = new WebSocket(url)
         // 監聽連線狀態
         ws.onopen = () => {
