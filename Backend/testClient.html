@@ -4,7 +4,7 @@
 
     </head>
     <body>
-        <textarea id="txtShow" disabled></textarea>
+        <textarea id="txtShow" disabled style="height: 50vh; width: 50vh;"></textarea>
         <input id="txtInput" type="text">
         <button id="btnSend">送出</button>
         <button id="btnClean">Clean</button>
@@ -57,7 +57,7 @@
         })
 
         // 建立 WebSocket (本例 server 端於本地運行)
-        let url = 'wss://imu-websocket-server.onrender.com'
+        let url = 'ws://localhost:3000'//'wss://imu-websocket-server.onrender.com'
         var ws = new WebSocket(url)
         // 監聽連線狀態
         ws.onopen = () => {
