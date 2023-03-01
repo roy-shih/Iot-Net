@@ -494,7 +494,7 @@ export const links = [
     title: 'Data Collection',
     links: [
       {
-        name: 'Multi-IMU Lab',
+        name: 'Multi-IMU-Lab',
         icon: <AiOutlineStock />, // <FiShoppingBag />,
       },
     ],

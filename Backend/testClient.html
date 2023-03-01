@@ -40,11 +40,11 @@
         })
 
         document.querySelector("#btnSendList").addEventListener('click',() => {
-            let msg = {
-                type: 'deviceList',
-                data: list
-            }
-            ws.send(JSON.stringify(msg));
+            // let msg = {
+            //     type: 'deviceList',
+            //     data: list
+            // }
+            ws.send(JSON.stringify({ "type":"sensor", "data":{"value": "device1", "label": "device1"} }));
         })
 
         document.querySelector("#btnSend").addEventListener('click',() => {
@@ -57,7 +57,7 @@
         })
 
         // 建立 WebSocket (本例 server 端於本地運行)
-        let url = 'ws://localhost:3000'//'wss://imu-websocket-server.onrender.com'
+        let url = 'wss://imu-websocket-server.onrender.com'//'ws://localhost:3000'
         var ws = new WebSocket(url)
         // 監聽連線狀態
         ws.onopen = () => {

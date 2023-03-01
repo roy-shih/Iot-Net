@@ -23,8 +23,12 @@ const WebSocket = ({ onDeviceConnected, sendData, loadingLongData, output }) => 
     // setMessageHistory((prev) => prev.concat(lastMessage));
     //   console.log(lastMessage.data);
       const parseMsg = JSON.parse(lastMessage.data);
+      const listData = [];
       if (parseMsg.type === 'deviceList') {
-        setDeviceList(parseMsg.data);
+        parseMsg.data.forEach((element) => {
+          listData.push(element.data);
+        });
+        setDeviceList(listData);
       }
       if (parseMsg.type === 'data' && parseMsg.device === device) {
         const dataString = parseMsg.data.split('S')[1].split('E')[0].split(';');

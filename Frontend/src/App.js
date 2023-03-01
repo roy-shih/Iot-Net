@@ -66,7 +66,7 @@ const App = () => {
               <Routes>
                 {/* dashboard  */}
                 <Route path="/" element={(<MultiIMUDataCollectSystem />)} />
-                <Route path="/multiimu" element={(<MultiIMUDataCollectSystem />)} />
+                <Route path="/Multi-IMU-Lab" element={(<MultiIMUDataCollectSystem />)} />
 
                 {/* pages  */}
                 {/* <Route path="/orders" element={<Orders />} />
