@@ -24,6 +24,7 @@ const WebSocket = ({ onDeviceConnected, sendData, loadingLongData, output }) => 
     //   console.log(lastMessage.data);
       const parseMsg = JSON.parse(lastMessage.data);
       const listData = [];
+      console.log(lastMessage.data,parseMsg);
       if (parseMsg.type === 'deviceList') {
         parseMsg.data.forEach((element) => {
           listData.push(element.data);

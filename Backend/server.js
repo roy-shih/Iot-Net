@@ -54,7 +54,7 @@ wss.on('connection', ws => {
         // 可在 terminal 看收到的訊息
         console.log(data) 
         wss.clients.forEach(client => {
-            client.send(JSON.stringify(data)); // 發送至每個 client
+            client.send(data); // 發送至每個 client
         })
     }
   })
