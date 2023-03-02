@@ -3,6 +3,23 @@ const SocketServer = require('ws').Server
 const PORT = 3000 //指定 port
 var deviceList = []
 
+function isJSON(str) {
+  if(!str){
+    return false;
+  }
+  if (typeof str == 'string') {
+    try {
+      var obj=JSON.parse(str);
+      if(typeof obj == 'object' && obj ){
+        return true;
+      }else{
+        return false;
+      }
+    }catch(e) {
+      return false;
+    }
+  }
+}
 
 //創建 express 物件，綁定監聽  port , 設定開啟後在 console 中提示
 const server = express().listen(PORT, () => {
@@ -35,31 +52,33 @@ wss.on('connection', ws => {
   ws.on('message', data => {
     // 收回來是 Buffer 格式、需轉成字串
     data = data.toString()  
-    try {
-      let dataObj = JSON.parse(data) // 將字串轉成 JSON 格式
-      if (dataObj.type == 'sensor') {
-          // 取得這筆資料的 cliend data
-          let datamsg = {
-              client: ws.id,
-              data: dataObj.data
-          }
-          // 將資料存入 deviceList
-          deviceList.push(datamsg)
-          // 將資料發送給所有 client
-          let clients = wss.clients  //取得所有連接中的 client
-          clients.forEach(client => {
-              client.send(JSON.stringify(msg)); // 發送至每個 client
-          })
-      }else{
-          /// 發送消息給client 
-          // 可在 terminal 看收到的訊息
-          console.log(data) 
-          wss.clients.forEach(client => {
-              client.send(data); // 發送至每個 client
-          })
-      }
-    } catch (error) {
-      console.log(error)
+    // 判斷data是否為json 格式
+    if (!isJSON(data)) {
+        console.log('not json: ', data)
+        return
+    }
+
+    let dataObj = JSON.parse(data) // 將字串轉成 JSON 格式
+    if (dataObj.type == 'sensor') {
+        // 取得這筆資料的 cliend data
+        let datamsg = {
+            client: ws.id,
+            data: dataObj.data
+        }
+        // 將資料存入 deviceList
+        deviceList.push(datamsg)
+        // 將資料發送給所有 client
+        let clients = wss.clients  //取得所有連接中的 client
+        clients.forEach(client => {
+            client.send(JSON.stringify(msg)); // 發送至每個 client
+        })
+    }else{
+        /// 發送消息給client 
+        // 可在 terminal 看收到的訊息
+        console.log(data) 
+        wss.clients.forEach(client => {
+            client.send(data); // 發送至每個 client
+        })
     }
   })
   // 當連線關閉
