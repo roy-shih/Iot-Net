@@ -57,7 +57,7 @@
         })
 
         // 建立 WebSocket (本例 server 端於本地運行)
-        let url = 'wss://imu-websocket-server.onrender.com'//'ws://localhost:3000'
+        let url = 'ws://localhost:3000'//'wss://imu-websocket-server.onrender.com:443'//
         var ws = new WebSocket(url)
         // 監聽連線狀態
         ws.onopen = () => {

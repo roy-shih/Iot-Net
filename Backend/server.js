@@ -72,6 +72,18 @@ wss.on('connection', ws => {
         clients.forEach(client => {
             client.send(JSON.stringify(msg)); // 發送至每個 client
         })
+    }else if(dataObj.type == 'sensorMsg'){
+        if(dataObj.data=="disconnect"){
+          const disDevice = dataObj.device;
+          deviceList = deviceList.filter(item => item.data.value !== disDevice)
+          console.log(disDevice, 'Close connected')
+          msg.data = deviceList
+          // 將資料發送給所有 client
+          let clients = wss.clients  //取得所有連接中的 client
+          clients.forEach(client => {
+              client.send(JSON.stringify(msg)); // 發送至每個 client
+          })
+        }
     }else{
         /// 發送消息給client 
         // 可在 terminal 看收到的訊息

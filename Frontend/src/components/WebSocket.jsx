@@ -24,7 +24,6 @@ const WebSocket = ({ onDeviceConnected, sendData, loadingLongData, output }) => 
     //   console.log(lastMessage.data);
       const parseMsg = JSON.parse(lastMessage.data);
       const listData = [];
-      console.log(lastMessage.data,parseMsg);
       if (parseMsg.type === 'deviceList') {
         parseMsg.data.forEach((element) => {
           listData.push(element.data);
@@ -61,7 +60,7 @@ const WebSocket = ({ onDeviceConnected, sendData, loadingLongData, output }) => 
     // parse the data
     if (sendData !== null) {
       let parsedData = JSON.parse(sendData);
-      parsedData = JSON.stringify({ ...parsedData, device });
+      parsedData = JSON.stringify({ ...parsedData, device, type: 'sensorControl' });
       sendMessage(parsedData);
     }
   }, [sendData]);
